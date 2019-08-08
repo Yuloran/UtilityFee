@@ -47,6 +47,28 @@
             <TextView
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:text="应缴金额："
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_fee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:gravity="center"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
                 android:text="缴费周期："
                 android:textSize="16sp" />
 
@@ -63,8 +85,8 @@
                 android:layout_width="5dp"
                 android:layout_height="1dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="6dp"
                 android:layout_marginEnd="6dp"
+                android:layout_marginStart="6dp"
                 android:background="@android:color/darker_gray" />
 
             <TextView
@@ -109,26 +131,6 @@
 
             <TextView
                 android:id="@+id/tv_fee_percent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:gravity="center"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <TextView
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:text="应缴金额："
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tv_fee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"

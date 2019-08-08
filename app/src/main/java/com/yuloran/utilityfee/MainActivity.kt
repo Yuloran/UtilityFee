@@ -5,11 +5,14 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.yuloran.utilityfee.model.Tenant
 import com.yuloran.utilityfee.ui.adapter.TenantAdapter
 import com.yuloran.utilityfee.ui.FeeCalActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -58,8 +61,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initTenants() {
         mTenants.clear()
+        val endDate = TimeUtils.date2String(Date(), SimpleDateFormat("yyyy-M-d", Locale.US))
         for (i in 0 until mTenantsCount) {
-            mTenants.add(Tenant())
+            mTenants.add(Tenant(endDate = endDate))
         }
         mTenantAdapter.notifyDataSetChanged()
     }

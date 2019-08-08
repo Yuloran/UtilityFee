@@ -14,6 +14,8 @@ import com.yuloran.utilityfee.R
 import com.yuloran.utilityfee.model.Tenant
 import com.yuloran.utilityfee.ui.adapter.TenantFeeAdapter
 import kotlinx.android.synthetic.main.activity_fee_cal.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -53,6 +55,7 @@ class FeeCalActivity : AppCompatActivity() {
                     .show()
         }
 
+        et_end_date.text = TimeUtils.date2String(Date(), SimpleDateFormat("yyyy-M-d", Locale.US))
         et_end_date.setOnClickListener {
             val datePicker = WheelDatePicker(this@FeeCalActivity)
             AlertDialog.Builder(this@FeeCalActivity)
@@ -86,13 +89,20 @@ class FeeCalActivity : AppCompatActivity() {
 
         var daysSum = 0
         for (tenant in mTenants) {
-            val startSpan = TimeUtils.getTimeSpan(tenant.startDate, feeSumStartDate, SimpleDateFormat("yyyy-M-d", Locale.US), TimeConstants.DAY)
-            val endSpan = TimeUtils.getTimeSpan(feeSumEndDate, tenant.startDate, SimpleDateFormat("yyyy-M-d", Locale.US), TimeConstants.DAY)
-            if (startSpan < 0 || endSpan <= 0) {
+            val preStartSpan = TimeUtils.getTimeSpan(tenant.startDate, feeSumStartDate, SimpleDateFormat("yyyy-M-d", Locale.US), TimeConstants.DAY)
+            val postStartSpan = TimeUtils.getTimeSpan(feeSumEndDate, tenant.startDate, SimpleDateFormat("yyyy-M-d", Locale.US), TimeConstants.DAY)
+            if (preStartSpan < 0 || postStartSpan <= 0) {
                 ToastUtils.showShort(String.format("%s 的入住日期[%s]填写错误，请重新填写！", tenant.name, tenant.startDate))
                 return
             }
-            tenant.days = endSpan.toInt()
+
+            val diff = TimeUtils.getTimeSpan(tenant.endDate, tenant.startDate, SimpleDateFormat("yyyy-M-d", Locale.US), TimeConstants.DAY)
+            val postEndSpan = TimeUtils.getTimeSpan(feeSumEndDate, tenant.endDate, SimpleDateFormat("yyyy-M-d", Locale.US), TimeConstants.DAY)
+            if (diff < 0 || postEndSpan < 0) {
+                ToastUtils.showShort(String.format("%s 的退住日期[%s]填写错误，请重新填写！", tenant.name, tenant.endDate))
+                return
+            }
+            tenant.days = diff.toInt()
             daysSum += tenant.days
         }
 
@@ -100,8 +110,8 @@ class FeeCalActivity : AppCompatActivity() {
         LogUtils.d("cal: fee sum : %f", feeSum)
         for (tenant in mTenants) {
             val percent = tenant.days * 1.0F / daysSum
-            tenant.feePercent = percent.toString()
-            tenant.fee = (feeSum * percent).toString()
+            tenant.feePercent = BigDecimal((percent * 100).toString()).setScale(2, RoundingMode.HALF_UP).toDouble().toString() + "%"
+            tenant.fee = BigDecimal((feeSum * percent).toString()).setScale(2, RoundingMode.HALF_UP).toDouble().toString() + "元"
             LogUtils.d("cal: %s, %s, %s", tenant.name, tenant.feePercent, tenant.fee)
         }
 
